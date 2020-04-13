@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'app_exceptions.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = "https://api.covid19india.org/";
+  final String _baseUrl = "https://api.rootnet.in/covid19-in/";
 
   Future<dynamic> get(String url) async {
     print('Api Get, url $url');
