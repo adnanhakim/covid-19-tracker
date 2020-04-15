@@ -1,6 +1,7 @@
 import 'package:covid_19_tracker/models/history_response.dart';
 import 'package:covid_19_tracker/models/stats_response.dart';
 import 'package:covid_19_tracker/network/api_repository.dart';
+import 'package:covid_19_tracker/screens/detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -87,7 +88,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             FontAwesomeIcons.solidArrowAltCircleRight,
                             color: Theme.of(context).primaryColor,
                           ),
-                          onPressed: () {},
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => DetailScreen(),
+                            ),
+                          ),
                         ),
                       ],
                     ),
