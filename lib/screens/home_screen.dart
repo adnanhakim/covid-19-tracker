@@ -3,6 +3,8 @@ import 'package:covid_19_tracker/models/stats_response.dart';
 import 'package:covid_19_tracker/network/api_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -13,14 +15,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Future<HistoryResponse> _historyFuture;
-  Future<StatsResponse> _statsFuture;
   ApiRepository _apiRepository;
+  DateFormat dateFormat = new DateFormat('E, dd MMM yy');
 
   @override
   void initState() {
     super.initState();
     _apiRepository = ApiRepository();
-    _statsFuture = _apiRepository.fetchStats();
     _historyFuture = _apiRepository.fetchHistory();
   }
 
@@ -57,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 5.0),
                     Text(
-                      'Wed, 24 Mar 20',
+                      dateFormat.format(DateTime.now()),
                       style: TextStyle(
                         fontSize: 16,
                         color: Color(0xFF727693),
@@ -74,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          'COVID-19 Latest Update',
+                          'Latest Update',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -83,9 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         IconButton(
                           icon: Icon(
-                            Icons.refresh,
+                            FontAwesomeIcons.solidArrowAltCircleRight,
                             color: Theme.of(context).primaryColor,
-                            size: 24.0,
                           ),
                           onPressed: () {},
                         ),
@@ -133,196 +133,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class StatsWidget extends StatefulWidget {
-  final Data data;
-
-  StatsWidget({this.data});
-
-  @override
-  _StatsWidgetState createState() => _StatsWidgetState();
-}
-
-class _StatsWidgetState extends State<StatsWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.all(20.0),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            gradient: LinearGradient(
-              colors: [Colors.orange[800], Colors.orange[300]],
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'Confirmed',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                widget.data.summary.total.toString(),
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 15.0),
-        Container(
-          padding: EdgeInsets.all(20.0),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            gradient: LinearGradient(
-              colors: [Colors.red[800], Colors.red[300]],
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'Deaths',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                widget.data.summary.deaths.toString(),
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 15.0),
-        Container(
-          padding: EdgeInsets.all(20.0),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            gradient: LinearGradient(
-              colors: [Colors.green[800], Colors.green[300]],
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'Recovered',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                widget.data.summary.discharged.toString(),
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// class StatsTable extends StatefulWidget {
-//   @override
-//   _StatsTableState createState() => _StatsTableState();
-// }
-//
-// class _StatsTableState extends State<StatsTable> {
-//   @override
-//   Widget build(BuildContext context) {
-//     StatsResponseNotifier _notifier =
-//         Provider.of<StatsResponseNotifier>(context);
-
-//     return SingleChildScrollView(
-//       scrollDirection: Axis.vertical,
-//       child: SingleChildScrollView(
-//         scrollDirection: Axis.horizontal,
-//         child: DataTable(
-//           columns: <DataColumn>[
-//             DataColumn(
-//               label: Text('State'),
-//             ),
-//             DataColumn(
-//                 label: Text('Confirmed'),
-//                 numeric: true,
-//                 onSort: (index, boolean) {
-//                   setState(() {
-//                     _notifier.regionalData.sort(
-//                         (a, b) => b.totalConfirmed.compareTo(a.totalConfirmed));
-//                   });
-//                 }),
-//             DataColumn(
-//                 label: Text('Deaths'),
-//                 numeric: true,
-//                 onSort: (index, boolean) {
-//                   if (boolean) {
-//                     setState(() {
-//                       _notifier.regionalData
-//                           .sort((a, b) => a.deaths.compareTo(b.deaths));
-//                     });
-//                   } else {
-//                     setState(() {
-//                       _notifier.regionalData
-//                           .sort((a, b) => b.deaths.compareTo(a.deaths));
-//                     });
-//                   }
-//                 }),
-//             DataColumn(
-//               label: Text('Recoveries'),
-//               numeric: true,
-//             ),
-//           ],
-//           rows: _notifier.regionalData
-//               .map(
-//                 (state) => DataRow(
-//                   cells: [
-//                     DataCell(
-//                       Text(state.loc),
-//                     ),
-//                     DataCell(
-//                       Text(state.totalConfirmed.toString()),
-//                     ),
-//                     DataCell(
-//                       Text(state.deaths.toString()),
-//                     ),
-//                     DataCell(
-//                       Text(state.discharged.toString()),
-//                     ),
-//                   ],
-//                 ),
-//               )
-//               .toList(),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class TrendGraph extends StatefulWidget {
   final List<DataByDay> dataList;
 
@@ -346,7 +156,7 @@ class _TrendGraphState extends State<TrendGraph> {
     List<double> confirmedData = [];
     List<double> deathData = [];
     List<double> recoveryData = [];
-    for (int i = widget.dataList.length - 7; i < widget.dataList.length; i++) {
+    for (int i = widget.dataList.length - 14; i < widget.dataList.length; i++) {
       HistorySummary today = widget.dataList[i].historySummary;
       HistorySummary yesterday = widget.dataList[i - 1].historySummary;
       confirmedData.add((today.total - yesterday.total).toDouble());
@@ -363,6 +173,7 @@ class _TrendGraphState extends State<TrendGraph> {
   Widget build(BuildContext context) {
     RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
     Function mathFunc = (Match match) => '${match[1]},';
+
     return Container(
       padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
       width: double.infinity,
@@ -382,7 +193,7 @@ class _TrendGraphState extends State<TrendGraph> {
                   'Confirmed cases'.toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 18,
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
@@ -396,7 +207,7 @@ class _TrendGraphState extends State<TrendGraph> {
                           .replaceAllMapped(reg, mathFunc),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 32,
+                        fontSize: 28,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
@@ -418,7 +229,7 @@ class _TrendGraphState extends State<TrendGraph> {
                                 .replaceAllMapped(reg, mathFunc),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 18,
                           color: Colors.orange[800],
                         ),
                       ),
@@ -436,7 +247,7 @@ class _TrendGraphState extends State<TrendGraph> {
                     fillGradient: new LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.orange[300], Colors.orange[50]],
+                      colors: [Colors.orange[200], Colors.orange[50]],
                     ),
                   ),
                 ),
@@ -457,7 +268,7 @@ class _TrendGraphState extends State<TrendGraph> {
                   'Deaths'.toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 18,
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
@@ -471,7 +282,7 @@ class _TrendGraphState extends State<TrendGraph> {
                           .replaceAllMapped(reg, mathFunc),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 32,
+                        fontSize: 28,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
@@ -493,7 +304,7 @@ class _TrendGraphState extends State<TrendGraph> {
                                 .replaceAllMapped(reg, mathFunc),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 18,
                           color: Colors.red[800],
                         ),
                       ),
@@ -511,7 +322,7 @@ class _TrendGraphState extends State<TrendGraph> {
                     fillGradient: new LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.red[300], Colors.red[50]],
+                      colors: [Colors.red[200], Colors.red[50]],
                     ),
                   ),
                 ),
@@ -532,7 +343,7 @@ class _TrendGraphState extends State<TrendGraph> {
                   'Recoveries'.toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 18,
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
@@ -546,7 +357,7 @@ class _TrendGraphState extends State<TrendGraph> {
                           .replaceAllMapped(reg, mathFunc),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 32,
+                        fontSize: 28,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
@@ -586,7 +397,7 @@ class _TrendGraphState extends State<TrendGraph> {
                     fillGradient: new LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.green[300], Colors.green[50]],
+                      colors: [Colors.green[200], Colors.green[50]],
                     ),
                   ),
                 ),
