@@ -20,8 +20,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Proxima',
-        primaryColor: Color(0xFF222B45),
-        scaffoldBackgroundColor: Color(0xFFF2F3F6),
+        // primaryColor: Color(0xFF222B45),
+        primaryColor: Color(0xFF3F5673),
+        // scaffoldBackgroundColor: Color(0xFFF2F3F6),
+        scaffoldBackgroundColor: Color(0xFFF5F7FD),
       ),
       home: HomeScreen(),
     );

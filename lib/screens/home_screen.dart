@@ -1,4 +1,5 @@
 import 'package:covid_19_tracker/models/history_response.dart';
+import 'package:covid_19_tracker/models/stats_response.dart';
 import 'package:covid_19_tracker/network/api_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
@@ -12,12 +13,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Future<HistoryResponse> _historyFuture;
+  Future<StatsResponse> _statsFuture;
   ApiRepository _apiRepository;
 
   @override
   void initState() {
     super.initState();
     _apiRepository = ApiRepository();
+    _statsFuture = _apiRepository.fetchStats();
     _historyFuture = _apiRepository.fetchHistory();
   }
 
@@ -88,83 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    Container(
-                      padding: EdgeInsets.all(20.0),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        gradient: LinearGradient(
-                          colors: [Colors.orange[800], Colors.orange[300]],
-                        ),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            'Confirmed',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Row(
-                            children: <Widget>[],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 15.0),
-                    Container(
-                      padding: EdgeInsets.all(20.0),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        gradient: LinearGradient(
-                          colors: [Colors.red[800], Colors.red[300]],
-                        ),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            'Deaths',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Row(
-                            children: <Widget>[],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 15.0),
-                    Container(
-                      padding: EdgeInsets.all(20.0),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        gradient: LinearGradient(
-                          colors: [Colors.green[800], Colors.green[300]],
-                        ),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            'Recovered',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Row(
-                            children: <Widget>[],
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -185,7 +111,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       case ConnectionState.done:
                         print('Done');
-                        return TrendGraph(dataList: snapshot.data.data);
+                        return TrendGraph(
+                          dataList: snapshot.data.data,
+                        );
                     }
                   } else if (snapshot.hasError) {
                     return Container(
@@ -201,6 +129,120 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class StatsWidget extends StatefulWidget {
+  final Data data;
+
+  StatsWidget({this.data});
+
+  @override
+  _StatsWidgetState createState() => _StatsWidgetState();
+}
+
+class _StatsWidgetState extends State<StatsWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(20.0),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            gradient: LinearGradient(
+              colors: [Colors.orange[800], Colors.orange[300]],
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Confirmed',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                widget.data.summary.total.toString(),
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15.0),
+        Container(
+          padding: EdgeInsets.all(20.0),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            gradient: LinearGradient(
+              colors: [Colors.red[800], Colors.red[300]],
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Deaths',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                widget.data.summary.deaths.toString(),
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15.0),
+        Container(
+          padding: EdgeInsets.all(20.0),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            gradient: LinearGradient(
+              colors: [Colors.green[800], Colors.green[300]],
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Recovered',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                widget.data.summary.discharged.toString(),
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -319,81 +361,236 @@ class _TrendGraphState extends State<TrendGraph> {
 
   @override
   Widget build(BuildContext context) {
+    RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    Function mathFunc = (Match match) => '${match[1]},';
     return Container(
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            'Confirmed cases trend',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-          SizedBox(height: 10.0),
           Container(
-            height: 150.0,
-            child: Sparkline(
-              data: _graphDataList[0],
-              lineColor: Colors.orange[800],
-              lineWidth: 4.0,
-              fillMode: FillMode.below,
-              fillGradient: new LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.orange[800], Colors.orange[100]],
-              ),
+            padding: EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Confirmed cases'.toUpperCase(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      widget.dataList[widget.dataList.length - 1].historySummary
+                          .total
+                          .toString()
+                          .replaceAllMapped(reg, mathFunc),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    SizedBox(width: 10.0),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.orange[100],
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                      child: Text(
+                        '+' +
+                            (widget.dataList[widget.dataList.length - 1]
+                                        .historySummary.total -
+                                    widget.dataList[widget.dataList.length - 2]
+                                        .historySummary.total)
+                                .toString()
+                                .replaceAllMapped(reg, mathFunc),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.orange[800],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.0),
+                Container(
+                  height: 150.0,
+                  child: Sparkline(
+                    data: _graphDataList[0],
+                    lineColor: Colors.orange[800],
+                    lineWidth: 4.0,
+                    fillMode: FillMode.below,
+                    fillGradient: new LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.orange[300], Colors.orange[50]],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(height: 20.0),
-          Text(
-            'Deaths trend',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-          SizedBox(height: 10.0),
           Container(
-            height: 150.0,
-            child: Sparkline(
-              data: _graphDataList[1],
-              lineColor: Colors.red[800],
-              lineWidth: 4.0,
-              fillMode: FillMode.below,
-              fillGradient: new LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.red[800], Colors.red[100]],
-              ),
+            padding: EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Deaths'.toUpperCase(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      widget.dataList[widget.dataList.length - 1].historySummary
+                          .deaths
+                          .toString()
+                          .replaceAllMapped(reg, mathFunc),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    SizedBox(width: 10.0),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.red[100],
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                      child: Text(
+                        '+' +
+                            (widget.dataList[widget.dataList.length - 1]
+                                        .historySummary.deaths -
+                                    widget.dataList[widget.dataList.length - 2]
+                                        .historySummary.deaths)
+                                .toString()
+                                .replaceAllMapped(reg, mathFunc),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.red[800],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.0),
+                Container(
+                  height: 150.0,
+                  child: Sparkline(
+                    data: _graphDataList[1],
+                    lineColor: Colors.red[800],
+                    lineWidth: 4.0,
+                    fillMode: FillMode.below,
+                    fillGradient: new LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.red[300], Colors.red[50]],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(height: 20.0),
-          Text(
-            'Recovery trend',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-          SizedBox(height: 10.0),
           Container(
-            height: 150.0,
-            child: Sparkline(
-              data: _graphDataList[2],
-              lineColor: Colors.green[800],
-              lineWidth: 4.0,
-              fillMode: FillMode.below,
-              fillGradient: new LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.green[800], Colors.green[100]],
-              ),
+            padding: EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Recoveries'.toUpperCase(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      widget.dataList[widget.dataList.length - 1].historySummary
+                          .discharged
+                          .toString()
+                          .replaceAllMapped(reg, mathFunc),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    SizedBox(width: 10.0),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.green[100],
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                      child: Text(
+                        '+' +
+                            (widget.dataList[widget.dataList.length - 1]
+                                        .historySummary.discharged -
+                                    widget.dataList[widget.dataList.length - 2]
+                                        .historySummary.discharged)
+                                .toString()
+                                .replaceAllMapped(reg, mathFunc),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.green[800],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.0),
+                Container(
+                  height: 150.0,
+                  child: Sparkline(
+                    data: _graphDataList[2],
+                    lineColor: Colors.green[800],
+                    lineWidth: 4.0,
+                    fillMode: FillMode.below,
+                    fillGradient: new LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.green[300], Colors.green[50]],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
