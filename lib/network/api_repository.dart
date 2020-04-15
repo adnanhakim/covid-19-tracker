@@ -1,5 +1,5 @@
-import 'package:covid_19_tracker/models/HistoryResponse.dart';
-import 'package:covid_19_tracker/models/StatsResponse.dart';
+import 'package:covid_19_tracker/models/history_response.dart';
+import 'package:covid_19_tracker/models/stats_response.dart';
 
 import 'api_base_helper.dart';
 

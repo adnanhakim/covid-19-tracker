@@ -1,7 +1,8 @@
-import 'package:covid_19_tracker/notifiers/HistoryResponseNotifier.dart';
-import 'package:covid_19_tracker/screens/HomeScreen.dart';
+import 'package:covid_19_tracker/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'notifiers/history_response_notifier.dart';
 
 void main() => runApp(
       ChangeNotifierProvider(

@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:covid_19_tracker/models/DataResponse.dart';
+import 'package:covid_19_tracker/models/data_response.dart';
 import 'package:flutter/material.dart';
 
 class DataResponseNotifier with ChangeNotifier {

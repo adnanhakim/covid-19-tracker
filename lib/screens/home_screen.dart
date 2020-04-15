@@ -1,10 +1,7 @@
-import 'package:covid_19_tracker/models/HistoryResponse.dart';
-import 'package:covid_19_tracker/models/StatsResponse.dart';
+import 'package:covid_19_tracker/models/history_response.dart';
 import 'package:covid_19_tracker/network/api_repository.dart';
-import 'package:covid_19_tracker/notifiers/HistoryResponseNotifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -97,13 +94,65 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
                         gradient: LinearGradient(
-                          colors: [Colors.orange, Colors.orange[200]],
+                          colors: [Colors.orange[800], Colors.orange[300]],
                         ),
                       ),
                       child: Row(
                         children: <Widget>[
                           Text(
                             'Confirmed',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Row(
+                            children: <Widget>[],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 15.0),
+                    Container(
+                      padding: EdgeInsets.all(20.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        gradient: LinearGradient(
+                          colors: [Colors.red[800], Colors.red[300]],
+                        ),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'Deaths',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Row(
+                            children: <Widget>[],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 15.0),
+                    Container(
+                      padding: EdgeInsets.all(20.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        gradient: LinearGradient(
+                          colors: [Colors.green[800], Colors.green[300]],
+                        ),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'Recovered',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -289,13 +338,13 @@ class _TrendGraphState extends State<TrendGraph> {
             height: 150.0,
             child: Sparkline(
               data: _graphDataList[0],
-              lineColor: Colors.orange,
+              lineColor: Colors.orange[800],
               lineWidth: 4.0,
               fillMode: FillMode.below,
               fillGradient: new LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.orange, Colors.orange[100]],
+                colors: [Colors.orange[800], Colors.orange[100]],
               ),
             ),
           ),
@@ -313,13 +362,13 @@ class _TrendGraphState extends State<TrendGraph> {
             height: 150.0,
             child: Sparkline(
               data: _graphDataList[1],
-              lineColor: Theme.of(context).primaryColor,
+              lineColor: Colors.red[800],
               lineWidth: 4.0,
               fillMode: FillMode.below,
               fillGradient: new LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Theme.of(context).primaryColor, Colors.transparent],
+                colors: [Colors.red[800], Colors.red[100]],
               ),
             ),
           ),
@@ -337,13 +386,13 @@ class _TrendGraphState extends State<TrendGraph> {
             height: 150.0,
             child: Sparkline(
               data: _graphDataList[2],
-              lineColor: Theme.of(context).primaryColor,
+              lineColor: Colors.green[800],
               lineWidth: 4.0,
               fillMode: FillMode.below,
               fillGradient: new LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Theme.of(context).primaryColor, Colors.transparent],
+                colors: [Colors.green[800], Colors.green[100]],
               ),
             ),
           ),
